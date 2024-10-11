@@ -1,31 +1,32 @@
-package local
+package vault
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
-
-	"github.com/Devleaps/github-secrets-synchronizer/internal/vault"
 )
 
 const (
-	DEFAULT_FILE_PATH = "secrets.json"
+	DEFAULT_JSON_FILE_PATH = "secrets.json"
 )
 
-// LocalVaultClient implements the VaultClient interface for a local JSON file
-type LocalVaultClient struct {
+// JSONVaultClient implements the VaultClient interface for a local JSON file
+type JSONVaultClient struct {
 	filePath string
 }
 
+// NewJSONVaultClient creates a new JSONVaultClient
+func NewJSONVaultClient() *JSONVaultClient {
+	return &JSONVaultClient{}
+}
+
 // InitializeClient initializes the local vault client by reading the JSON file
-func (v *LocalVaultClient) InitializeClient() error {
-	filePath := os.Getenv("LOCAL_VAULT_FILE_PATH")
+func (v *JSONVaultClient) InitializeClient() error {
+	filePath := os.Getenv("JSON_VAULT_FILE_PATH")
 
 	if filePath == "" {
-		filePath = DEFAULT_FILE_PATH
-		log.Printf("Using default file path: %s\n", filePath)
+		filePath = DEFAULT_JSON_FILE_PATH
 	}
 
 	v.filePath = filePath
@@ -34,7 +35,7 @@ func (v *LocalVaultClient) InitializeClient() error {
 }
 
 // GetSecrets retrieves secrets from the local JSON file
-func (v *LocalVaultClient) GetSecrets() (*[]vault.VaultSecret, error) {
+func (v *JSONVaultClient) GetSecrets() ([]VaultSecret, error) {
 	file, err := os.Open(v.filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
@@ -46,9 +47,9 @@ func (v *LocalVaultClient) GetSecrets() (*[]vault.VaultSecret, error) {
 		return nil, fmt.Errorf("failed to read file: %w", err)
 	}
 
-	secrets := &[]vault.VaultSecret{}
+	var secrets []VaultSecret
 
-	if err := json.Unmarshal(bytes, secrets); err != nil {
+	if err := json.Unmarshal(bytes, &secrets); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal JSON: %w", err)
 	}
 

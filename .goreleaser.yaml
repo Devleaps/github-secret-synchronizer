@@ -1,5 +1,5 @@
 version: 2
-project_name: github-secrets-synchronizer
+project_name: github-secret-synchronizer
 
 before:
   hooks:
@@ -35,10 +35,7 @@ release:
   prerelease: auto
   draft: false
   footer: |
-    **Full Changelog**: https://github.com/argoproj/argo-cd/compare/{{ .PreviousTag }}...{{ .Tag }}
-    
-    <a href="https://argoproj.github.io/cd/"><img src="https://raw.githubusercontent.com/argoproj/argo-site/master/content/pages/cd/gitops-cd.png" width="25%" ></a>
-
+    **Full Changelog**: https://github.com/Devleaps/github-secret-synchronizer/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 changelog:
   use:

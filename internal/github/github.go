@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 	"encoding/base64"
-	"log"
+	"errors"
 	"net/http"
 	"os"
 	"strconv"
@@ -13,56 +13,76 @@ import (
 	"golang.org/x/crypto/nacl/box"
 )
 
-// Client defines the interface for interacting with GitHub
-type Client interface {
-	NewClient() (*github.Client, error)
-	GetOrgPublicKey(client *github.Client) (string, string, error)
-	EncryptSecret(secretValue, publicKey string) (string, error)
-	PushEncryptedSecret(client *github.Client, secretName, encryptedSecret, keyID string) error
-}
+type GitHubWrapper struct {
+	client *github.Client
 
-// GitHubService implements the Client interface
-type GitHubService struct {
 	appID          int64
 	installationID int64
 	privateKey     []byte
 	orgName        string
-}
 
-// NewGitHubService creates a new GitHubService
-func NewGitHubService() *GitHubService {
-	appID, installationID, privateKey, orgName := getGitHubAppCredentials()
-	return &GitHubService{
-		appID:          appID,
-		installationID: installationID,
-		privateKey:     privateKey,
-		orgName:        orgName,
-	}
+	publicKey string
+	keyID     string
 }
 
 // NewClient creates a new GitHub client
-func (s *GitHubService) NewClient() (*github.Client, error) {
-	itr, err := ghinstallation.New(http.DefaultTransport, s.appID, s.installationID, s.privateKey)
+func (g *GitHubWrapper) NewClient() error {
+	appID, installationID, privateKey, orgName, err := getGitHubAppCredentials()
 	if err != nil {
-		return nil, err
+		return err
+	}
+	g.appID = appID
+	g.installationID = installationID
+	g.privateKey = privateKey
+	g.orgName = orgName
+
+	itr, err := ghinstallation.New(http.DefaultTransport, g.appID, g.installationID, g.privateKey)
+	if err != nil {
+		return err
 	}
 
 	client := github.NewClient(&http.Client{Transport: itr})
-	return client, nil
+	g.client = client
+
+	publicKey, keyID, err := g.getOrgPublicKey()
+	if err != nil {
+		return err
+	}
+	g.publicKey = publicKey
+	g.keyID = keyID
+	return nil
 }
 
-// GetOrgPublicKey retrieves the organization public key
-func (s *GitHubService) GetOrgPublicKey(client *github.Client) (string, string, error) {
+// PushEncryptedSecret pushes the encrypted secret to GitHub
+func (g *GitHubWrapper) PushSecret(secretName string, secretValue string, visibility string) error {
+	encryptedSecret, err := encryptSecret(secretValue, g.publicKey)
+	if err != nil {
+		return err
+	}
 	ctx := context.Background()
-	publicKey, _, err := client.Actions.GetOrgPublicKey(ctx, s.orgName)
+	secret := &github.EncryptedSecret{
+		Name:           secretName,
+		KeyID:          g.keyID,
+		EncryptedValue: encryptedSecret,
+		Visibility:     visibility,
+	}
+	_, err = g.client.Actions.CreateOrUpdateOrgSecret(ctx, g.orgName, secret)
+
+	return err
+}
+
+// getOrgPublicKey retrieves the organization public key
+func (g *GitHubWrapper) getOrgPublicKey() (string, string, error) {
+	ctx := context.Background()
+	publicKey, _, err := g.client.Actions.GetOrgPublicKey(ctx, g.orgName)
 	if err != nil {
 		return "", "", err
 	}
 	return publicKey.GetKey(), publicKey.GetKeyID(), nil
 }
 
-// EncryptSecret encrypts a secret value using the public key
-func (s *GitHubService) EncryptSecret(secretValue, publicKey string) (string, error) {
+// ecryptSecret encrypts a secret value using the public key
+func encryptSecret(secretValue, publicKey string) (string, error) {
 	publicKeyBytes, err := base64.StdEncoding.DecodeString(publicKey)
 	if err != nil {
 		return "", err
@@ -79,50 +99,37 @@ func (s *GitHubService) EncryptSecret(secretValue, publicKey string) (string, er
 	return base64.StdEncoding.EncodeToString(encrypted), nil
 }
 
-// PushEncryptedSecret pushes the encrypted secret to GitHub
-func (s *GitHubService) PushEncryptedSecret(client *github.Client, secretName, encryptedSecret, keyID string, visibility string) error {
-	ctx := context.Background()
-	secret := &github.EncryptedSecret{
-		Name:           secretName,
-		KeyID:          keyID,
-		EncryptedValue: encryptedSecret,
-		Visibility:     visibility,
-	}
-	_, err := client.Actions.CreateOrUpdateOrgSecret(ctx, s.orgName, secret)
-	return err
-}
-
 // getGitHubAppCredentials retrieves the GitHub App credentials from the environment
-func getGitHubAppCredentials() (int64, int64, []byte, string) {
+func getGitHubAppCredentials() (int64, int64, []byte, string, error) {
 	appID, exists := os.LookupEnv("GITHUB_APP_ID")
 	if !exists {
-		log.Fatal("GITHUB_APP_ID environment variable is required")
+		return 0, 0, nil, "", errors.New("GITHUB_APP_ID environment variable is required")
 	}
 
 	installationID, exists := os.LookupEnv("GITHUB_INSTALLATION_ID")
 	if !exists {
-		log.Fatal("GITHUB_INSTALLATION_ID environment variable is required")
+		return 0, 0, nil, "", errors.New("GITHUB_INSTALLATION_ID environment variable is required")
 	}
 
 	privateKey, exists := os.LookupEnv("GITHUB_PRIVATE_KEY")
 	if !exists {
-		log.Fatal("GITHUB_PRIVATE_KEY environment variable is required")
+		return 0, 0, nil, "", errors.New("GITHUB_PRIVATE_KEY environment variable is required")
 	}
 
 	orgName, exists := os.LookupEnv("GITHUB_ORG_NAME")
 	if !exists {
-		log.Fatal("GITHUB_ORG_NAME environment variable is required")
+		return 0, 0, nil, "", errors.New("GITHUB_ORG_NAME environment variable is required")
 	}
 
 	parsedAppID, err := strconv.ParseInt(appID, 10, 64)
 	if err != nil {
-		log.Fatalf("failed to parse GITHUB_APP_ID: %v", err)
+		return 0, 0, nil, "", errors.New("failed to parse GITHUB_APP_ID")
 	}
 
 	parsedInstallationID, err := strconv.ParseInt(installationID, 10, 64)
 	if err != nil {
-		log.Fatalf("failed to parse GITHUB_INSTALLATION_ID: %v", err)
+		return 0, 0, nil, "", errors.New("failed to parse GITHUB_INSTALLATION_ID")
 	}
 
-	return parsedAppID, parsedInstallationID, []byte(privateKey), orgName
+	return parsedAppID, parsedInstallationID, []byte(privateKey), orgName, nil
 }

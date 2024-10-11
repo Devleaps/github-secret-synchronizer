@@ -264,5 +264,6 @@ $RECYCLE.BIN/
 
 .env
 secrets.json
+secrets.yaml
 
 dist/
