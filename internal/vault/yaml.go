@@ -17,11 +17,6 @@ type YAMLVaultClient struct {
 	filePath string
 }
 
-// NewYAMLVaultClient creates a new YAMLVaultClient
-func NewYAMLVaultClient() *YAMLVaultClient {
-	return &YAMLVaultClient{}
-}
-
 // InitializeClient initializes the local vault client by reading the YAML file
 func (v *YAMLVaultClient) InitializeClient() error {
 	filePath := os.Getenv("YAML_VAULT_FILE_PATH")

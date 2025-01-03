@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/Devleaps/github-secret-synchronizer/internal/vault"
 	"github.com/bradleyfalzon/ghinstallation/v2"
 	"github.com/google/go-github/v64/github"
 	"golang.org/x/crypto/nacl/box"
@@ -54,19 +55,88 @@ func (g *GitHubWrapper) NewClient() error {
 }
 
 // PushEncryptedSecret pushes the encrypted secret to GitHub
-func (g *GitHubWrapper) PushSecret(secretName string, secretValue string, visibility string) error {
-	encryptedSecret, err := encryptSecret(secretValue, g.publicKey)
+func (g *GitHubWrapper) PushSecret(secret vault.VaultSecret) error {
+	encryptedSecret, err := encryptSecret(secret.Value, g.publicKey)
 	if err != nil {
 		return err
 	}
-	ctx := context.Background()
-	secret := &github.EncryptedSecret{
-		Name:           secretName,
-		KeyID:          g.keyID,
-		EncryptedValue: encryptedSecret,
-		Visibility:     visibility,
+	var ghSecret *github.EncryptedSecret
+	if secret.Visibility == vault.SELECTED_VISIBILITY {
+		repositoryIds, err := g.retrieveRepositoriesIds(secret.Repositories)
+		if err != nil {
+			return err
+		}
+		ghSecret = &github.EncryptedSecret{
+			Name:                  secret.Name,
+			KeyID:                 g.keyID,
+			EncryptedValue:        encryptedSecret,
+			Visibility:            secret.Visibility,
+			SelectedRepositoryIDs: repositoryIds,
+		}
+	} else {
+		ghSecret = &github.EncryptedSecret{
+			Name:           secret.Name,
+			KeyID:          g.keyID,
+			EncryptedValue: encryptedSecret,
+			Visibility:     secret.Visibility,
+		}
 	}
-	_, err = g.client.Actions.CreateOrUpdateOrgSecret(ctx, g.orgName, secret)
+
+	ctx := context.Background()
+	_, err = g.client.Actions.CreateOrUpdateOrgSecret(ctx, g.orgName, ghSecret)
+
+	return err
+}
+
+// PushVariable pushes the variable to GitHub
+func (g *GitHubWrapper) PushVariable(variable vault.VaultSecret) error {
+	var ghVariable *github.ActionsVariable
+	if variable.Visibility == vault.SELECTED_VISIBILITY {
+		repositoryIds, err := g.retrieveRepositoriesIds(variable.Repositories)
+		if err != nil {
+			return err
+		}
+		ghVariable = &github.ActionsVariable{
+			Name:                  variable.Name,
+			Value:                 variable.Value,
+			Visibility:            &variable.Visibility,
+			SelectedRepositoryIDs: &repositoryIds,
+		}
+	} else {
+		ghVariable = &github.ActionsVariable{
+			Name:       variable.Name,
+			Value:      variable.Value,
+			Visibility: &variable.Visibility,
+		}
+	}
+	err := g.createOrUpdateVariable(ghVariable)
+
+	return err
+}
+
+func (g *GitHubWrapper) retrieveRepositoriesIds(repositories []string) (github.SelectedRepoIDs, error) {
+	var repositoryIds []int64
+	for _, repository := range repositories {
+		repo, _, err := g.client.Repositories.Get(context.Background(), g.orgName, repository)
+		if err != nil {
+			return nil, err
+		}
+		repositoryIds = append(repositoryIds, repo.GetID())
+	}
+	return repositoryIds, nil
+}
+
+// createOrUpdateVariable creates or updates a variable in the organization
+func (g *GitHubWrapper) createOrUpdateVariable(variable *github.ActionsVariable) error {
+	ctx := context.Background()
+	_, res, err := g.client.Actions.GetOrgVariable(ctx, g.orgName, variable.Name)
+	if res.StatusCode == 404 {
+		_, err = g.client.Actions.CreateOrgVariable(ctx, g.orgName, variable)
+	} else if res.StatusCode == 200 {
+		_, err = g.client.Actions.UpdateOrgVariable(ctx, g.orgName, variable)
+	} else {
+		return errors.New("Unable to get variable, status code: " + strconv.Itoa(res.StatusCode))
+	}
 
 	return err
 }
@@ -123,12 +193,12 @@ func getGitHubAppCredentials() (int64, int64, []byte, string, error) {
 
 	parsedAppID, err := strconv.ParseInt(appID, 10, 64)
 	if err != nil {
-		return 0, 0, nil, "", errors.New("failed to parse GITHUB_APP_ID")
+		return 0, 0, nil, "", errors.New("Failed to parse GITHUB_APP_ID")
 	}
 
 	parsedInstallationID, err := strconv.ParseInt(installationID, 10, 64)
 	if err != nil {
-		return 0, 0, nil, "", errors.New("failed to parse GITHUB_INSTALLATION_ID")
+		return 0, 0, nil, "", errors.New("Failed to parse GITHUB_INSTALLATION_ID")
 	}
 
 	return parsedAppID, parsedInstallationID, []byte(privateKey), orgName, nil

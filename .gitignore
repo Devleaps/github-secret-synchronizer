@@ -266,4 +266,5 @@ $RECYCLE.BIN/
 secrets.json
 secrets.yaml
 
-dist/
+!examples/secrets.json
+!examples/secrets.yaml

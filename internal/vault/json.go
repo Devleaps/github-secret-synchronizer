@@ -16,11 +16,6 @@ type JSONVaultClient struct {
 	filePath string
 }
 
-// NewJSONVaultClient creates a new JSONVaultClient
-func NewJSONVaultClient() *JSONVaultClient {
-	return &JSONVaultClient{}
-}
-
 // InitializeClient initializes the local vault client by reading the JSON file
 func (v *JSONVaultClient) InitializeClient() error {
 	filePath := os.Getenv("JSON_VAULT_FILE_PATH")

@@ -1,13 +1,20 @@
-FROM golang:1.23.1-alpine3.20
+FROM golang:1.23.4-alpine3.21 AS build
 
-WORKDIR /github-secret-synchronizer
+WORKDIR /app
 
 COPY go.mod go.sum ./
-
 RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /github-secret-synchronizer/github-secret-synchronizer
+RUN CGO_ENABLED=0 GOOS=linux go build -o gss .
 
-CMD ["/github-secret-synchronizer/github-secret-synchronizer"]
+FROM alpine:3.21.0
+
+WORKDIR /app
+
+COPY --from=build /app/gss .
+
+RUN apk add --no-cache ca-certificates tzdata
+
+CMD ["/app/gss"]
