@@ -184,27 +184,4 @@ To set the necessary environment variables to be able to run github-secrets-sync
 
 By setting an environment variable `LOCAL` to `true`, github-secrets-synchronizer will pretty-print the output to the console.
 
-An example of a `.env` file:
-```env
-GITHUB_APP_ID=a-github-app-id
-GITHUB_INSTALLATION_ID=a-github-installation-id
-GITHUB_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
-a-multi-line-private-key
------END RSA PRIVATE KEY-----"
-GITHUB_ORG_NAME=an-org-name
-
-
-AZURE_KEYVAULT_URL="https://some-vault.vault.azure.net"
-AZURE_CLIENT_ID="an-azure-client-id"
-AZURE_TENANT_ID="an-azure-tenant-id"
-AZURE_CLIENT_SECRET="an-azure-client-secret"
-
-AWS_ACCESS_KEY_ID="an-aws-access-key-id"
-AWS_SECRET_ACCESS_KEY="an-aws-secret-access-key"
-AWS_REGION="an-aws-region"
-
-DEFAULT_VISIBILITY="all-or-private-or-selected"
-DEFAULT_TYPE="secret-or-variable"
-
-LOCAL=true
-```
+An example of a `.env` file can be found under [`.env.example`](.env.example).
