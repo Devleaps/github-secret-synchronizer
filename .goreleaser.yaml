@@ -19,15 +19,21 @@ builds:
 dockers:
   - image_templates:
       - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
-    use: buildx
     build_flag_templates:
       - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
       - "--platform=linux/amd64"
   - image_templates:
       - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
-    use: buildx
     build_flag_templates:
       - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
       - "--platform=linux/arm64"
     goarch: arm64
 
