@@ -19,6 +19,7 @@ builds:
 dockers:
   - image_templates:
       - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+    use: buildx
     build_flag_templates:
       - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
@@ -28,6 +29,7 @@ dockers:
       - "--platform=linux/amd64"
   - image_templates:
       - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+    use: buildx
     build_flag_templates:
       - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
