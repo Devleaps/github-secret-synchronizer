@@ -270,3 +270,5 @@ secrets.yaml
 !examples/secrets.yaml
 
 dist
+
+github-secret-synchronizer

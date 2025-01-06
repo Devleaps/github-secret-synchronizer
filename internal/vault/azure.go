@@ -36,11 +36,16 @@ func (v *AzureVaultClient) InitializeClient() error {
 	}
 
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
+
 	if err != nil {
-		return fmt.Errorf("failed to acquire Azure credentials: %v", err)
+		return err
 	}
-	// Establish a connection to the Key Vault client
+
 	client, err := azsecrets.NewClient(v.azureVaultURL, cred, nil)
+
+	if err != nil {
+		return err
+	}
 
 	v.client = client
 

@@ -16,6 +16,21 @@ builds:
       - amd64
       - arm64
 
+dockers:
+  - image_templates:
+      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/amd64"
+  - image_templates:
+      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/arm64"
+    goarch: arm64
+
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.

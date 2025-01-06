@@ -27,10 +27,14 @@ func main() {
 	// Initialize the vault
 	vaultClient, err := vault.InitializeVault()
 	if err != nil {
-		log.Fatal().Err(err).Msg("Error initializing vault client")
+		log.Fatal().Err(err).Msg("Error initializing vault")
 	}
 
-	vaultClient.InitializeClient()
+	err = vaultClient.InitializeClient()
+
+	if err != nil {
+		log.Fatal().Err(err).Msg("Error initializing vault client")
+	}
 
 	// Retrieve secrets from the vault
 	secrets, err := vaultClient.GetSecrets()
@@ -39,7 +43,11 @@ func main() {
 	}
 
 	// Set defaults in case they are not provided
-	vault.HandleDefaults(secrets)
+	err = vault.HandleDefaults(secrets)
+
+	if err != nil {
+		log.Fatal().Err(err).Msg("Error handling defaults")
+	}
 
 	// Encrypt and push each secret to GitHub
 	for _, secret := range secrets {

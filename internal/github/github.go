@@ -117,7 +117,8 @@ func (g *GitHubWrapper) retrieveRepositoriesIds(repositories []string) (github.S
 // createOrUpdateVariable creates or updates a variable in the organization
 func (g *GitHubWrapper) createOrUpdateVariable(variable *github.ActionsVariable) error {
 	ctx := context.Background()
-	_, res, err := g.client.Actions.GetOrgVariable(ctx, g.orgName, variable.Name)
+	var err error
+	_, res, _ := g.client.Actions.GetOrgVariable(ctx, g.orgName, variable.Name)
 	if res.StatusCode == 404 {
 		_, err = g.client.Actions.CreateOrgVariable(ctx, g.orgName, variable)
 	} else if res.StatusCode == 200 {
