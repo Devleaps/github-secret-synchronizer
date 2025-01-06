@@ -58,3 +58,28 @@ jobs:
           # renovate: datasource=go packageName=github.com/golangci/golangci-lint versioning=regex:^v(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)?$
           version: v1.63.4
           args: --verbose
+
+  test-go:
+    name: Test Go code
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # v4.0.0
+
+      - name: Setup Golang
+        uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
+        with:
+          go-version: ${{ env.GOLANG_VERSION }}
+
+      - name: Run tests
+        run: |
+          go install github.com/jstemmer/go-junit-report/v2@latest
+          go test -v ./... | go-junit-report -set-exit-code > report.xml
+
+      - name: Upload test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Go Tests
+          path: report.xml
+          reporter: junit-xml
