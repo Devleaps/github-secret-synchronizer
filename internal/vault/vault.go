@@ -73,6 +73,7 @@ func HandleDefaults(secrets []VaultSecret) error {
 	defaultRepositories := os.Getenv("DEFAULT_REPOSITORIES")
 
 	for i := range secrets {
+		secrets[i].Name = formatSecretName(secrets[i].Name)
 		if secrets[i].Visibility == "" {
 			secrets[i].Visibility = defaultVisibility
 		}
@@ -123,4 +124,8 @@ func acquireDefaultRepositories() []string {
 		log.Warn().Msg("DEFAULT_REPOSITORIES is unset")
 	}
 	return defaultRepositories
+}
+
+func formatSecretName(secretName string) string {
+	return strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(secretName, " ", "_"), "-", "_"))
 }

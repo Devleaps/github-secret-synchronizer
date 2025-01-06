@@ -57,7 +57,7 @@ func (v *AWSVaultClient) GetSecrets() ([]VaultSecret, error) {
 		}
 
 		secrets = append(secrets, VaultSecret{
-			Name:         strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(*secret.Name, " ", "_"), "-", "_")),
+			Name:         *secret.Name,
 			Value:        *result.SecretString,
 			Type:         secretType,
 			Visibility:   visibility,

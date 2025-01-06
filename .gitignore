@@ -268,3 +268,5 @@ secrets.yaml
 
 !examples/secrets.json
 !examples/secrets.yaml
+
+dist

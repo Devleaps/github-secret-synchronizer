@@ -53,12 +53,12 @@ func (v *AzureVaultClient) GetSecrets() ([]VaultSecret, error) {
 
 	pager := v.client.NewListSecretsPager(nil)
 	for pager.More() {
-		page, err := pager.NextPage(context.TODO())
+		page, err := pager.NextPage(context.Background())
 		if err != nil {
 			return nil, err
 		}
 		for _, secret := range page.Value {
-			pullSecret, err := v.client.GetSecret(context.TODO(), secret.ID.Name(), secret.ID.Version(), &azsecrets.GetSecretOptions{})
+			pullSecret, err := v.client.GetSecret(context.Background(), secret.ID.Name(), secret.ID.Version(), &azsecrets.GetSecretOptions{})
 			if err != nil {
 				return nil, err
 			}
@@ -68,7 +68,7 @@ func (v *AzureVaultClient) GetSecrets() ([]VaultSecret, error) {
 			}
 
 			newSecret := VaultSecret{
-				Name:         strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(pullSecret.ID.Name(), " ", "_"), "-", "_")),
+				Name:         pullSecret.ID.Name(),
 				Value:        *pullSecret.Value,
 				Type:         *pullSecret.Tags["type"],
 				Visibility:   *pullSecret.Tags["visibility"],

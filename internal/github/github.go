@@ -60,26 +60,20 @@ func (g *GitHubWrapper) PushSecret(secret vault.VaultSecret) error {
 	if err != nil {
 		return err
 	}
-	var ghSecret *github.EncryptedSecret
+
+	ghSecret := &github.EncryptedSecret{
+		Name:           secret.Name,
+		KeyID:          g.keyID,
+		EncryptedValue: encryptedSecret,
+		Visibility:     secret.Visibility,
+	}
+
 	if secret.Visibility == vault.SELECTED_VISIBILITY {
 		repositoryIds, err := g.retrieveRepositoriesIds(secret.Repositories)
 		if err != nil {
 			return err
 		}
-		ghSecret = &github.EncryptedSecret{
-			Name:                  secret.Name,
-			KeyID:                 g.keyID,
-			EncryptedValue:        encryptedSecret,
-			Visibility:            secret.Visibility,
-			SelectedRepositoryIDs: repositoryIds,
-		}
-	} else {
-		ghSecret = &github.EncryptedSecret{
-			Name:           secret.Name,
-			KeyID:          g.keyID,
-			EncryptedValue: encryptedSecret,
-			Visibility:     secret.Visibility,
-		}
+		ghSecret.SelectedRepositoryIDs = repositoryIds
 	}
 
 	ctx := context.Background()
@@ -90,27 +84,21 @@ func (g *GitHubWrapper) PushSecret(secret vault.VaultSecret) error {
 
 // PushVariable pushes the variable to GitHub
 func (g *GitHubWrapper) PushVariable(variable vault.VaultSecret) error {
-	var ghVariable *github.ActionsVariable
+	ghVariable := &github.ActionsVariable{
+		Name:       variable.Name,
+		Value:      variable.Value,
+		Visibility: &variable.Visibility,
+	}
+
 	if variable.Visibility == vault.SELECTED_VISIBILITY {
 		repositoryIds, err := g.retrieveRepositoriesIds(variable.Repositories)
 		if err != nil {
 			return err
 		}
-		ghVariable = &github.ActionsVariable{
-			Name:                  variable.Name,
-			Value:                 variable.Value,
-			Visibility:            &variable.Visibility,
-			SelectedRepositoryIDs: &repositoryIds,
-		}
-	} else {
-		ghVariable = &github.ActionsVariable{
-			Name:       variable.Name,
-			Value:      variable.Value,
-			Visibility: &variable.Visibility,
-		}
+		ghVariable.SelectedRepositoryIDs = &repositoryIds
 	}
-	err := g.createOrUpdateVariable(ghVariable)
 
+	err := g.createOrUpdateVariable(ghVariable)
 	return err
 }
 

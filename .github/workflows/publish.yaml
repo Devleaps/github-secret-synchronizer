@@ -45,7 +45,7 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
-  goreleaser:
+  release:
     runs-on: ubuntu-latest
     needs: docker
     steps:
