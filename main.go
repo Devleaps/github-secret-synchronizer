@@ -49,22 +49,32 @@ func main() {
 		log.Fatal().Err(err).Msg("Error handling defaults")
 	}
 
+	dryRun := false
+	// If DRY_RUN is set to true, set a variable
+	if os.Getenv("DRY_RUN") == "true" {
+		dryRun = true
+	}
+
 	// Encrypt and push each secret to GitHub
 	for _, secret := range secrets {
 		if secret.Type == vault.SECRET_TYPE {
-			log.Info().Str("secret", secret.Name).Msg("Pushing secret...")
-			err = githubWrapper.PushSecret(secret)
-			if err != nil {
-				log.Fatal().Err(err).Msg("Error pushing secret")
+			log.Info().Str("secret", secret.Name).Bool("dry-run", dryRun).Msg("Pushing secret...")
+			if !dryRun {
+				err = githubWrapper.PushSecret(secret)
+				if err != nil {
+					log.Fatal().Err(err).Msg("Error pushing secret")
+				}
 			}
-			log.Info().Str("secret", secret.Name).Msg("Secret pushed successfully!")
+			log.Info().Str("secret", secret.Name).Bool("dry-run", dryRun).Msg("Secret pushed successfully!")
 		} else if secret.Type == vault.VARIABLE_TYPE {
-			log.Info().Str("variable", secret.Name).Msg("Pushing variable...")
-			err = githubWrapper.PushVariable(secret)
-			if err != nil {
-				log.Fatal().Err(err).Msg("Error pushing variable")
+			log.Info().Str("variable", secret.Name).Bool("dry-run", dryRun).Msg("Pushing variable...")
+			if !dryRun {
+				err = githubWrapper.PushVariable(secret)
+				if err != nil {
+					log.Fatal().Err(err).Msg("Error pushing variable")
+				}
 			}
-			log.Info().Str("variable", secret.Name).Msg("Variable pushed successfully!")
+			log.Info().Str("variable", secret.Name).Bool("dry-run", dryRun).Msg("Variable pushed successfully!")
 		}
 	}
 }

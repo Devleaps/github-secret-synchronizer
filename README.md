@@ -24,6 +24,9 @@ An application to synchronize secrets/variables into your GitHub organization.
 - [x] Pull information from Azure Key Vault to synchronize
 - [x] Pull information from AWS Secrets Manager to synchronize
 
+### Synchronizing
+- [x] Allow for a dry-run
+
 ## To be implemented
 
 ### Vaults
@@ -31,9 +34,6 @@ An application to synchronize secrets/variables into your GitHub organization.
 - [ ] Pull information from Keeper Security to synchronize
 
 ### Synchronizing
-- [ ] Synchronize by polling a source
-- [ ] Schedule synchronizations using cron
-- [ ] Allow for a dry-run
 - [ ] Allow for full management (e.g. deleting secrets that are not in the source)
 
 ## GitHub
@@ -61,6 +61,10 @@ Defaults are naturally set within github-secrets-synchronizer. These defaults ca
 - `DEFAULT_REPOSITORIES` - The default repositories that the secret/variable should be visible to (comma-separated)
 
 The default visibility is `all`, the default type is `secret` and the default repositories is an empty string.
+
+## Dry-run
+
+To do a dry-run, set the `DRY_RUN` environment variable to `true`. This will not synchronize any secrets/variables to GitHub, but will show you what would have been synchronized.
 
 ## Vaults
 
