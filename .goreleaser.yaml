@@ -22,7 +22,7 @@ dockers:
     use: buildx
     build_flag_templates:
       - "--pull"
-      - "--label=org.opencontainers.image.source="https:"//github.com/Devleaps/github-secret-synchronizer"
+      - "--label=org.opencontainers.image.source={{ .GitURL }}"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
@@ -34,7 +34,7 @@ dockers:
     use: buildx
     build_flag_templates:
       - "--pull"
-      - "--label=org.opencontainers.image.source="https:"//github.com/Devleaps/github-secret-synchronizer"
+      - "--label=org.opencontainers.image.source={{ .GitURL }}"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
