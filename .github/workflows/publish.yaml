@@ -9,6 +9,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    permissions:
+      packages: write
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}:${{ github.ref_name }}
