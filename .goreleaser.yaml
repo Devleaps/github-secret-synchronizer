@@ -18,7 +18,7 @@ builds:
 
 dockers:
   - image_templates:
-      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}-amd64"
     use: buildx
     build_flag_templates:
       - "--pull"
@@ -30,7 +30,7 @@ dockers:
       - "--platform=linux/amd64"
     goarch: amd64
   - image_templates:
-      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}-arm64"
     use: buildx
     build_flag_templates:
       - "--pull"
@@ -41,6 +41,12 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--platform=linux/arm64"
     goarch: arm64
+
+docker_manifests:
+  - name_template: "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}"
+    image_templates:
+      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}-amd64"
+      - "ghcr.io/devleaps/github-secrets-synchronizer:{{ .Tag }}-arm64"
 
 archives:
   - format: tar.gz
