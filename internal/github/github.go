@@ -165,14 +165,14 @@ func getGitHubAppCredentials() (int64, int64, []byte, string, error) {
 		return 0, 0, nil, "", errors.New("GITHUB_APP_ID environment variable is required")
 	}
 
-	installationID, exists := os.LookupEnv("GITHUB_INSTALLATION_ID")
+	installationID, exists := os.LookupEnv("GITHUB_APP_INSTALLATION_ID")
 	if !exists {
-		return 0, 0, nil, "", errors.New("GITHUB_INSTALLATION_ID environment variable is required")
+		return 0, 0, nil, "", errors.New("GITHUB_APP_INSTALLATION_ID environment variable is required")
 	}
 
-	privateKey, exists := os.LookupEnv("GITHUB_PRIVATE_KEY")
+	privateKey, exists := os.LookupEnv("GITHUB_APP_PRIVATE_KEY")
 	if !exists {
-		return 0, 0, nil, "", errors.New("GITHUB_PRIVATE_KEY environment variable is required")
+		return 0, 0, nil, "", errors.New("GITHUB_APP_PRIVATE_KEY environment variable is required")
 	}
 
 	orgName, exists := os.LookupEnv("GITHUB_ORG_NAME")
@@ -182,12 +182,12 @@ func getGitHubAppCredentials() (int64, int64, []byte, string, error) {
 
 	parsedAppID, err := strconv.ParseInt(appID, 10, 64)
 	if err != nil {
-		return 0, 0, nil, "", errors.New("Failed to parse GITHUB_APP_ID")
+		return 0, 0, nil, "", errors.New("failed to parse GITHUB_APP_ID")
 	}
 
 	parsedInstallationID, err := strconv.ParseInt(installationID, 10, 64)
 	if err != nil {
-		return 0, 0, nil, "", errors.New("Failed to parse GITHUB_INSTALLATION_ID")
+		return 0, 0, nil, "", errors.New("failed to parse GITHUB_APP_INSTALLATION_ID")
 	}
 
 	return parsedAppID, parsedInstallationID, []byte(privateKey), orgName, nil

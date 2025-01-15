@@ -50,7 +50,7 @@ Make sure to install the GitHub App on the repositories you want to synchronize 
 The following environment variables are mandatory for github-secrets-synchronizer to work:
 - `GITHUB_APP_ID` - The ID of the GitHub App
 - `GITHUB_APP_PRIVATE_KEY` - The private key of the GitHub App
-- `GITHUB_INSTALLATION_ID` - The installation ID of the GitHub App
+- `GITHUB_APP_INSTALLATION_ID` - The installation ID of the GitHub App
 - `GITHUB_ORGANIZATION` - The organization to synchronize to
 
 ## Defaults
