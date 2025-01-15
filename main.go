@@ -8,6 +8,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	_ "golang.org/x/crypto/x509roots/fallback"
 )
 
 func init() {

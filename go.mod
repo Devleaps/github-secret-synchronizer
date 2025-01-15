@@ -44,5 +44,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/zerolog v1.33.0
 	golang.org/x/crypto v0.32.0
+	golang.org/x/crypto/x509roots/fallback v0.0.0-20250106144430-8929309228b4
 	gopkg.in/yaml.v3 v3.0.1
 )
