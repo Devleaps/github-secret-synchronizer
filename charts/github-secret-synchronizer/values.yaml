@@ -161,8 +161,31 @@ readinessProbe:
     # -- The port for the readiness probe
     port: http
 
+# -- Schedule on specific node
 nodeSelector: {}
 
+# -- Tolerations for the pod
 tolerations: []
 
+# -- Affinity for the pod
 affinity: {}
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []
+  # - apiVersion: external-secrets.io/v1beta1
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: some-random-secret
+  #   spec:
+  #     refreshInterval: 1h
+  #     secretStoreRef:
+  #       name: some-random-store
+  #       kind: ClusterSecretStore
+  #     target:
+  #       name: name-of-secret
+  #       creationPolicy: Owner
+  #     data:
+  #     - secretKey: aCoolValue
+  #       remoteRef:
+  #         key: some-key
