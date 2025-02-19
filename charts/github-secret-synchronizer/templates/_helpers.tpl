@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "github-secrets-synchronizer.name" -}}
+{{- define "github-secret-synchronizer.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "github-secrets-synchronizer.fullname" -}}
+{{- define "github-secret-synchronizer.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,15 +26,15 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "github-secrets-synchronizer.chart" -}}
+{{- define "github-secret-synchronizer.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "github-secrets-synchronizer.labels" -}}
-helm.sh/chart: {{ include "github-secrets-synchronizer.chart" . }}
+{{- define "github-secret-synchronizer.labels" -}}
+helm.sh/chart: {{ include "github-secret-synchronizer.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -44,33 +44,33 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 GitHub env block
 */}}
-{{- define "github-secrets-synchronizer.github-env" -}}
+{{- define "github-secret-synchronizer.github-env" -}}
 - name: GITHUB_APP_ID
   valueFrom:
     secretKeyRef:
-        name: {{ default (printf "%s-%s" (include "github-secrets-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
+        name: {{ default (printf "%s-%s" (include "github-secret-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
         key: appID
 - name: GITHUB_APP_INSTALLATION_ID
   valueFrom:
     secretKeyRef:
-        name: {{ default (printf "%s-%s" (include "github-secrets-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
+        name: {{ default (printf "%s-%s" (include "github-secret-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
         key: appInstallationID
 - name: GITHUB_APP_PRIVATE_KEY
   valueFrom:
     secretKeyRef:
-        name: {{ default (printf "%s-%s" (include "github-secrets-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
+        name: {{ default (printf "%s-%s" (include "github-secret-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
         key: appPrivateKey
 - name: GITHUB_ORG_NAME
   valueFrom:
     secretKeyRef:
-        name: {{ default (printf "%s-%s" (include "github-secrets-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
+        name: {{ default (printf "%s-%s" (include "github-secret-synchronizer.fullname" .) "github") .Values.github.existingSecretName }}
         key: organization
 {{- end }}
 
 {{/*
 Defaults for vault
 */}}
-{{- define "github-secrets-synchronizer.defaults" -}}
+{{- define "github-secret-synchronizer.defaults" -}}
 {{- if .Values.defaults.type }}
 - name: VAULT_DEFAULT_TYPE
   value: {{ .Values.defaults.type }}

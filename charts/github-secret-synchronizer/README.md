@@ -30,7 +30,7 @@ A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes secret
 | defaults.type | string | `""` | Default value for type (secret, variable) |
 | defaults.visibility | string | `""` | Default value for visibility (all, private, selected) |
 | extraObjects | list | `[]` | Array of extra K8s manifests to deploy # Note: Supports use of custom Helm templates |
-| fullnameOverride | string | `""` | String to fully override `"github-secrets-synchronizer.fullname"` |
+| fullnameOverride | string | `""` | String to fully override `"github-secret-synchronizer.fullname"` |
 | github.appID | string | `""` | The GitHub App ID |
 | github.appInstallationID | string | `""` | GitHub App installation ID |
 | github.appPrivateKey | string | `""` | The GitHub App Private Key |
@@ -38,9 +38,9 @@ A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes secret
 | github.organization | string | `""` | The GitHub organization |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the container image |
 | image.pullSecrets | list | `[]` | Pull secrets for the container image |
-| image.repository | string | `"ghcr.io/devleaps/github-secrets-synchronizer"` | Repository of the container image |
+| image.repository | string | `"ghcr.io/devleaps/github-secret-synchronizer"` | Repository of the container image |
 | image.tag | string | `"v0.0.5"` | Tag for the container image |
-| nameOverride | string | `""` | Provide a name in place of `github-secrets-synchronizer` |
+| nameOverride | string | `""` | Provide a name in place of `github-secret-synchronizer` |
 | namespaceOverride | string | `.Release.Namespace` | Override the namespace |
 | nodeSelector | object | `{}` | Schedule on specific node |
 | podAnnotations | object | `{}` | Provide a map of annotations for the pod |
