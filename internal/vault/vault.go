@@ -126,6 +126,7 @@ func acquireDefaultRepositories() []string {
 	return defaultRepositories
 }
 
+// formatSecretName formats the secret name to be used as an environment variable
 func formatSecretName(secretName string) string {
 	return strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(secretName, " ", "_"), "-", "_"))
 }

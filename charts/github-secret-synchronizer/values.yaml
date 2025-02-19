@@ -1,0 +1,168 @@
+# -- Provide a name in place of `github-secrets-synchronizer`
+nameOverride: ""
+# -- String to fully override `"github-secrets-synchronizer.fullname"`
+fullnameOverride: ""
+# -- Override the namespace
+# @default -- `.Release.Namespace`
+namespaceOverride: ""
+
+# -- Setting the replica count
+replicaCount: 1
+
+# The container image
+image:
+  # -- Repository of the container image
+  repository: ghcr.io/devleaps/github-secrets-synchronizer
+  # -- Pull policy for the container image
+  pullPolicy: IfNotPresent
+  # -- Tag for the container image
+  tag: v0.0.5
+  # -- Pull secrets for the container image
+  pullSecrets: []
+
+# Whether to run the synchronizer on a schedule
+cron:
+  # -- Enables the cron job
+  enabled: false
+  # -- The cron schedule
+  schedule: "*/5 * * * *"
+  # -- The restart policy for the cron job
+  restartPolicy: "OnFailure"
+  # -- The number of failed jobs to keep
+  failedJobsHistoryLimit: 1
+  # -- The number of successful jobs to keep
+  successfulJobsHistoryLimit: 3
+
+# Setting the GitHub information
+github:
+  # -- Whether a secret already exists in Kubernetes with the necessary properties
+  existingSecretName: ""
+  # -- The GitHub organization
+  organization: ""
+  # -- The GitHub App ID
+  appID: ""
+  # -- GitHub App installation ID
+  appInstallationID: ""
+  # -- The GitHub App Private Key
+  appPrivateKey: ""
+
+# Defaults to be set for synchronized secrets
+defaults:
+  # -- Default value for type (secret, variable)
+  type: ""
+  # -- Default value for visibility (all, private, selected)
+  visibility: ""
+  # -- Default value for repositories (in case visibility is selected). Needs to be comma-separated of repository names
+  repositories: ""
+
+# The synchronizer configuration (json, yaml, azure, aws)
+synchronizer:
+  json:
+    # -- Enables the JSON synchronizer
+    enabled: false
+    # -- The JSON data to be synchronized
+    data: []
+      # - name: some-secret
+      #   value: some-secret-content
+      #   type: secret
+      #   visibility: all
+      # - name: some-variable
+      #   value: some-variable-content
+      #   type: variable
+      #   visibility: selected
+      #   repositories:
+      #     - repo1
+      #     - repo2
+
+  yaml:
+    # -- Enables the YAML synchronizer
+    enabled: false
+    # -- The YAML data to be synchronized
+    data: []
+      # - name: some-secret
+      #   value: some-secret-content
+      #   type: secret
+      #   visibility: all
+      # - name: some-variable
+      #   value: some-variable-content
+      #   type: variable
+      #   visibility: private
+
+  azure:
+    # -- Enables the Azure Key Vault synchronizer
+    enabled: true
+    # -- Whether a secret already exists in Kubernetes with the necessary properties
+    existingSecretName: ""
+    # -- The Azure Key Vault URL
+    keyvaultURL: ""
+    # -- The Azure Key Vault client ID
+    clientID: ""
+    # -- The Azure Key Vault tenant ID
+    tenantID: ""
+    # -- The Azure Key Vault client secret
+    clientSecret: ""
+
+  aws:
+    # -- Enables the AWS Secrets Manager synchronizer
+    enabled: false
+    # -- Whether a secret already exists in Kubernetes with the necessary properties
+    existingSecretName: ""
+    # -- The AWS access key ID
+    accessKeyID: ""
+    # -- The AWS secret access key
+    secretAccessKey: ""
+    # -- The AWS region
+    region: ""
+
+# -- Provide a map of annotations for the pod
+podAnnotations: {}
+
+# -- Provide a map of labels for the pod
+podLabels: {}
+
+# -- Setting the the security context for the pod
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Setting the security context for the container(s)
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Setting the resources for the container(s)
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Setting the liveness probe
+livenessProbe:
+  httpGet:
+    # -- The path for the liveness probe
+    path: /
+    # -- The port for the liveness probe
+    port: http
+# Setting the readiness probe
+readinessProbe:
+  httpGet:
+    # -- The path for the readiness probe
+    path: /
+    # -- The port for the readiness probe
+    port: http
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
