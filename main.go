@@ -25,7 +25,6 @@ func main() {
 		log.Fatal().Err(err).Msg("Error initializing GitHub client")
 	}
 
-	// Initialize the vault
 	vaultClient, err := vault.InitializeVault()
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error initializing vault")

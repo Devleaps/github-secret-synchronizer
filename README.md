@@ -38,7 +38,7 @@ An application to synchronize secrets/variables into your GitHub organization.
 
 ## GitHub
 
-For github-secrets-synchronizer to work, it needs to be able to write secrets/variables to your GitHub organization. This can be done by creating a GitHub App and installing it on your organization. GitHub has excellent documentation on how to do this: [Creating a GitHub App](https://docs.github.com/en/apps/creating-github-apps).
+For github-secret-synchronizer to work, it needs to be able to write secrets/variables to your GitHub organization. This can be done by creating a GitHub App and installing it on your organization. GitHub has excellent documentation on how to do this: [Creating a GitHub App](https://docs.github.com/en/apps/creating-github-apps).
 
 Whilst creating the GitHub App, make sure to give it the following permissions:
 - `org:secrets:write` - if you want to synchronize secrets
@@ -47,7 +47,7 @@ Whilst creating the GitHub App, make sure to give it the following permissions:
 
 Make sure to install the GitHub App on the repositories you want to synchronize to in case you want to synchronize to selected repositories.
 
-The following environment variables are mandatory for github-secrets-synchronizer to work:
+The following environment variables are mandatory for github-secret-synchronizer to work:
 - `GITHUB_APP_ID` - The ID of the GitHub App
 - `GITHUB_APP_PRIVATE_KEY` - The private key of the GitHub App
 - `GITHUB_APP_INSTALLATION_ID` - The installation ID of the GitHub App
@@ -55,7 +55,7 @@ The following environment variables are mandatory for github-secrets-synchronize
 
 ## Defaults
 
-Defaults are naturally set within github-secrets-synchronizer. These defaults can be overriden by the user by setting the following environment variables:
+Defaults are naturally set within github-secret-synchronizer. These defaults can be overriden by the user by setting the following environment variables:
 - `DEFAULT_VISIBILITY` - The default visibility of the secret/variable (all, private, selected)
 - `DEFAULT_TYPE` - The default type of the secret/variable (secret, variable)
 - `DEFAULT_REPOSITORIES` - The default repositories that the secret/variable should be visible to (comma-separated)
@@ -72,7 +72,7 @@ To choose a vault to use, set the `VAULT_TYPE` environment variable to either `j
 
 ### JSON
 
-Secrets/Variables can be synchronized from a JSON file. For github-secrets-synchronizer to know where this file is, you can pass the following environment variable:
+Secrets/Variables can be synchronized from a JSON file. For github-secret-synchronizer to know where this file is, you can pass the following environment variable:
 - `JSON_VAULT_FILE_PATH` - The path to the JSON file
 
 The default is `secrets.json`.
@@ -120,7 +120,7 @@ An example with more possibilities can be found in [`examples/secrets.json`](exa
 
 ### YAML
 
-Secrets/Variables can be synchronized from a YAML file. For github-secrets-synchronizer to know where this file is, you can pass the following environment variable:
+Secrets/Variables can be synchronized from a YAML file. For github-secret-synchronizer to know where this file is, you can pass the following environment variable:
 - `YAML_VAULT_FILE_PATH` - The path to the YAML file
 
 The default is `secrets.yaml`.
@@ -156,7 +156,7 @@ An example with more possibilities can be found in [`examples/secrets.yaml`](exa
 
 ### Azure Key Vault
 
-Secrets stored in Azure Key Vault can be synchronized towards GitHub Secrets/Variables. The following environment variables are mandatory for github-secrets-synchronizer to work with Azure Key Vault:
+Secrets stored in Azure Key Vault can be synchronized towards GitHub Secrets/Variables. The following environment variables are mandatory for github-secret-synchronizer to work with Azure Key Vault:
 - `AZURE_CLIENT_ID` - The client ID of the Azure Service Principal
 - `AZURE_CLIENT_SECRET` - The client secret of the Azure Service Principal
 - `AZURE_TENANT_ID` - The tenant ID of the Azure Service Principal
@@ -168,7 +168,7 @@ Once you have the necessary permissions, you can add secrets to the Key Vault. T
 
 ### AWS Secrets Manager
 
-Secrets stored in AWS Secrets Manager can be synchronized towards GitHub Secrets/Variables. The following environment variables are mandatory for github-secrets-synchronizer to work with AWS Secrets Manager:
+Secrets stored in AWS Secrets Manager can be synchronized towards GitHub Secrets/Variables. The following environment variables are mandatory for github-secret-synchronizer to work with AWS Secrets Manager:
 - `AWS_ACCESS_KEY_ID` - The access key ID of the AWS IAM user
 - `AWS_SECRET_ACCESS_KEY` - The secret access key of the AWS IAM user
 - `AWS_REGION` - The region of the AWS Secrets Manager
@@ -179,13 +179,13 @@ Once you have the necessary permissions, you can add secrets to the Secrets Mana
 
 ## Local Development
 
-To run github-secrets-synchronizer locally, you can use the following command:
+To run github-secret-synchronizer locally, you can use the following command:
 ```bash
 go run main.go
 ```
 
-To set the necessary environment variables to be able to run github-secrets-synchronizer locally, you can create a `.env` file in the root of the project.
+To set the necessary environment variables to be able to run github-secret-synchronizer locally, you can create a `.env` file in the root of the project.
 
-By setting an environment variable `LOCAL` to `true`, github-secrets-synchronizer will pretty-print the output to the console.
+By setting an environment variable `LOCAL` to `true`, github-secret-synchronizer will pretty-print the output to the console.
 
 An example of a `.env` file can be found under [`.env.example`](.env.example).

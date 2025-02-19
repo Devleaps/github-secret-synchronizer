@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "github-secrets-synchronizer.fullname" . }}
+  name: {{ include "github-secret-synchronizer.fullname" . }}
   labels:
-    {{- include "github-secrets-synchronizer.labels" . | nindent 4 }}
+    {{- include "github-secret-synchronizer.labels" . | nindent 4 }}
 spec:
   template:
     metadata:
@@ -13,7 +13,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "github-secrets-synchronizer.labels" . | nindent 8 }}
+        {{- include "github-secret-synchronizer.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -26,19 +26,19 @@ spec:
       {{- end }}
       restartPolicy: {{ .Values.restartPolicy }}
       containers:
-        - name: {{ include "github-secrets-synchronizer.fullname" . }}
+        - name: {{ include "github-secret-synchronizer.fullname" . }}
           env:
-            {{- include "github-secrets-synchronizer.github-env" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.github-env" . | nindent 12 }}
             {{- if .Values.synchronizer.json.enabled }}
-            {{- include "github-secrets-synchronizer.json-env" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.json-env" . | nindent 12 }}
             {{- else if .Values.synchronizer.yaml.enabled }}
-            {{- include "github-secrets-synchronizer.yaml-env" .| nindent 12 }}
+            {{- include "github-secret-synchronizer.yaml-env" .| nindent 12 }}
             {{- else if .Values.synchronizer.azure.enabled }}
-            {{- include "github-secrets-synchronizer.azure-env" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.azure-env" . | nindent 12 }}
             {{- else if .Values.synchronizer.aws.enabled }}
-            {{- include "github-secrets-synchronizer.aws-env" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.aws-env" . | nindent 12 }}
             {{- end }}
-            {{- include "github-secrets-synchronizer.defaults" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.defaults" . | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,15 +46,15 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             {{- if .Values.synchronizer.json.enabled }}
-            {{- include "github-secrets-synchronizer.json-volumeMount" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.json-volumeMount" . | nindent 12 }}
             {{- else if .Values.synchronizer.yaml.enabled }}
-            {{- include "github-secrets-synchronizer.yaml-volumeMount" . | nindent 12 }}
+            {{- include "github-secret-synchronizer.yaml-volumeMount" . | nindent 12 }}
             {{- end }}
       volumes:
         {{- if .Values.synchronizer.json.enabled }}
-        {{- include "github-secrets-synchronizer.json-volume" . | nindent 8 }}
+        {{- include "github-secret-synchronizer.json-volume" . | nindent 8 }}
         {{- else if .Values.synchronizer.yaml.enabled }}
-        {{- include "github-secrets-synchronizer.yaml-volume" . | nindent 8 }}
+        {{- include "github-secret-synchronizer.yaml-volume" . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
