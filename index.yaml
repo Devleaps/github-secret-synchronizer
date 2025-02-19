@@ -3,6 +3,27 @@ entries:
   github-secret-synchronizer:
   - apiVersion: v2
     appVersion: v0.0.5
+    created: "2025-02-19T13:36:59.617902362Z"
+    description: A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes
+      secrets and variables to GitHub
+    digest: 631740abfbdee5003f1b48f51848052b01559ab9516a9b2089032422c33f62d0
+    home: https://github.com/Devleaps/github-secret-synchronizer
+    keywords:
+    - github
+    - devleaps
+    - secret
+    maintainers:
+    - name: Devleaps
+      url: https://devleaps.nl
+    name: github-secret-synchronizer
+    sources:
+    - https://github.com/Devleaps/github-secret-synchronizer/tree/main/charts/github-secret-synchronizer
+    - https://github.com/Devleaps/github-secret-synchronizer
+    urls:
+    - https://github.com/Devleaps/github-secret-synchronizer/releases/download/github-secret-synchronizer-0.1.1/github-secret-synchronizer-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: v0.0.5
     created: "2025-02-19T13:24:16.046353145Z"
     description: A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes
       secrets and variables to GitHub
@@ -22,4 +43,4 @@ entries:
     urls:
     - https://github.com/Devleaps/github-secret-synchronizer/releases/download/github-secret-synchronizer-0.1.0/github-secret-synchronizer-0.1.0.tgz
     version: 0.1.0
-generated: "2025-02-19T13:24:16.046363705Z"
+generated: "2025-02-19T13:36:59.617910547Z"
