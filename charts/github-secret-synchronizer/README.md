@@ -1,6 +1,6 @@
 # github-secret-synchronizer
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: v0.4.0](https://img.shields.io/badge/AppVersion-v0.4.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: v0.0.5](https://img.shields.io/badge/AppVersion-v0.0.5-informational?style=flat-square)
 
 A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes secrets and variables to GitHub
 
@@ -34,11 +34,12 @@ A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes secret
 | github.appID | string | `""` | The GitHub App ID |
 | github.appInstallationID | string | `""` | GitHub App installation ID |
 | github.appPrivateKey | string | `""` | The GitHub App Private Key |
+| github.existingSecretName | string | `""` | Whether a secret already exists in Kubernetes with the necessary properties |
 | github.organization | string | `""` | The GitHub organization |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the container image |
 | image.pullSecrets | list | `[]` | Pull secrets for the container image |
 | image.repository | string | `"ghcr.io/devleaps/github-secrets-synchronizer"` | Repository of the container image |
-| image.tag | string | `"v0.0.4"` | Tag for the container image |
+| image.tag | string | `"v0.0.5"` | Tag for the container image |
 | livenessProbe.httpGet.path | string | `"/"` | The path for the liveness probe |
 | livenessProbe.httpGet.port | string | `"http"` | The port for the liveness probe |
 | nameOverride | string | `""` | Provide a name in place of `github-secrets-synchronizer` |
@@ -54,11 +55,13 @@ A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes secret
 | securityContext | object | `{}` | Setting the security context for the container(s) |
 | synchronizer.aws.accessKeyID | string | `""` | The AWS access key ID |
 | synchronizer.aws.enabled | bool | `false` | Enables the AWS Secrets Manager synchronizer |
+| synchronizer.aws.existingSecretName | string | `""` | Whether a secret already exists in Kubernetes with the necessary properties |
 | synchronizer.aws.region | string | `""` | The AWS region |
 | synchronizer.aws.secretAccessKey | string | `""` | The AWS secret access key |
 | synchronizer.azure.clientID | string | `""` | The Azure Key Vault client ID |
 | synchronizer.azure.clientSecret | string | `""` | The Azure Key Vault client secret |
-| synchronizer.azure.enabled | bool | `false` | Enables the Azure Key Vault synchronizer |
+| synchronizer.azure.enabled | bool | `true` | Enables the Azure Key Vault synchronizer |
+| synchronizer.azure.existingSecretName | string | `""` | Whether a secret already exists in Kubernetes with the necessary properties |
 | synchronizer.azure.keyvaultURL | string | `""` | The Azure Key Vault URL |
 | synchronizer.azure.tenantID | string | `""` | The Azure Key Vault tenant ID |
 | synchronizer.json.data | list | `[]` | The JSON data to be synchronized |

@@ -9,14 +9,14 @@ namespaceOverride: ""
 # -- Setting the replica count
 replicaCount: 1
 
-# The container image  
+# The container image
 image:
   # -- Repository of the container image
   repository: ghcr.io/devleaps/github-secrets-synchronizer
   # -- Pull policy for the container image
   pullPolicy: IfNotPresent
   # -- Tag for the container image
-  tag: v0.0.4
+  tag: v0.0.5
   # -- Pull secrets for the container image
   pullSecrets: []
 
