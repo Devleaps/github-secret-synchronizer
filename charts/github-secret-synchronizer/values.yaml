@@ -20,14 +20,15 @@ image:
   # -- Pull secrets for the container image
   pullSecrets: []
 
+# -- The restart policy for the cron job
+restartPolicy: "OnFailure"
+
 # Whether to run the synchronizer on a schedule
 cron:
   # -- Enables the cron job
   enabled: false
   # -- The cron schedule
   schedule: "*/5 * * * *"
-  # -- The restart policy for the cron job
-  restartPolicy: "OnFailure"
   # -- The number of failed jobs to keep
   failedJobsHistoryLimit: 1
   # -- The number of successful jobs to keep
@@ -90,7 +91,7 @@ synchronizer:
 
   azure:
     # -- Enables the Azure Key Vault synchronizer
-    enabled: true
+    enabled: false
     # -- Whether a secret already exists in Kubernetes with the necessary properties
     existingSecretName: ""
     # -- The Azure Key Vault URL
@@ -145,21 +146,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-# Setting the liveness probe
-livenessProbe:
-  httpGet:
-    # -- The path for the liveness probe
-    path: /
-    # -- The port for the liveness probe
-    port: http
-# Setting the readiness probe
-readinessProbe:
-  httpGet:
-    # -- The path for the readiness probe
-    path: /
-    # -- The port for the readiness probe
-    port: http
 
 # -- Schedule on specific node
 nodeSelector: {}

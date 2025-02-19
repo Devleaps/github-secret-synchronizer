@@ -23,7 +23,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
         spec:
-          restartPolicy: {{ .Values.cron.restartPolicy }}
+          restartPolicy: {{ .Values.restartPolicy }}
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 12 }}
           {{- if .Values.image.pullSecrets }}
@@ -47,10 +47,6 @@ spec:
               securityContext:
                 {{- toYaml .Values.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-              livenessProbe:
-                {{- toYaml .Values.livenessProbe | nindent 16 }}
-              readinessProbe:
-                {{- toYaml .Values.readinessProbe | nindent 16 }}
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
               volumeMounts:
