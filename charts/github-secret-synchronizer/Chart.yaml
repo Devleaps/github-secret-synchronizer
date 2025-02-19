@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: v0.4.0
+description: A Helm chart for the GitHub Secret Synchronizer, a tool that synchronizes secrets and variables to GitHub
+name: github-secret-synchronizer
+version: 0.1.0
+home: https://github.com/Devleaps/github-secret-synchronizer
+sources:
+  - https://github.com/Devleaps/github-secret-synchronizer/tree/main/charts/github-secret-synchronizer
+  - https://github.com/Devleaps/github-secret-synchronizer
+keywords:
+  - github
+  - devleaps
+  - secret
+maintainers:
+  - name: Devleaps
+    url: https://devleaps.nl
