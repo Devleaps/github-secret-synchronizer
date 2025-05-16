@@ -21,7 +21,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.28.8 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.33.7 // indirect
 	github.com/aws/smithy-go v1.22.1 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/google/go-github/v68 v68.0.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
