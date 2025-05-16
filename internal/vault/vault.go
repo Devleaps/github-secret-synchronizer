@@ -96,7 +96,7 @@ func acquireDefaultVisibility() (string, error) {
 	}
 
 	if !slices.Contains([]string{ALL_VISIBILITY, PRIVATE_VISIBILITY, SELECTED_VISIBILITY}, defaultVisibility) {
-		return "", fmt.Errorf("Invalid visibility value: %s. Please pass one of %s, %s or %s", defaultVisibility, ALL_VISIBILITY, PRIVATE_VISIBILITY, SELECTED_VISIBILITY)
+		return "", fmt.Errorf("invalid visibility value: %s. Please pass one of %s, %s or %s", defaultVisibility, ALL_VISIBILITY, PRIVATE_VISIBILITY, SELECTED_VISIBILITY)
 	}
 	return defaultVisibility, nil
 }
@@ -109,7 +109,7 @@ func acquireDefaultType() (string, error) {
 	}
 
 	if !slices.Contains([]string{SECRET_TYPE, VARIABLE_TYPE}, defaultType) {
-		return "", fmt.Errorf("Invalid type value: %s. Please pass one of %s or %s", defaultType, SECRET_TYPE, VARIABLE_TYPE)
+		return "", fmt.Errorf("invalid type value: %s. Please pass one of %s or %s", defaultType, SECRET_TYPE, VARIABLE_TYPE)
 	}
 	return defaultType, nil
 }
