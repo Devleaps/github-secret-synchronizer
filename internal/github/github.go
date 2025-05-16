@@ -119,11 +119,12 @@ func (g *GitHubWrapper) createOrUpdateVariable(variable *github.ActionsVariable)
 	ctx := context.Background()
 	var err error
 	_, res, _ := g.client.Actions.GetOrgVariable(ctx, g.orgName, variable.Name)
-	if res.StatusCode == 404 {
+	switch res.StatusCode {
+	case 404:
 		_, err = g.client.Actions.CreateOrgVariable(ctx, g.orgName, variable)
-	} else if res.StatusCode == 200 {
+	case 200:
 		_, err = g.client.Actions.UpdateOrgVariable(ctx, g.orgName, variable)
-	} else {
+	default:
 		return errors.New("Unable to get variable, status code: " + strconv.Itoa(res.StatusCode))
 	}
 
