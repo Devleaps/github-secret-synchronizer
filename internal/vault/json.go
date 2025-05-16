@@ -35,7 +35,11 @@ func (v *JSONVaultClient) GetSecrets() ([]VaultSecret, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Printf("Failed to close file: %v", err)
+		}
+	}()
 
 	bytes, err := io.ReadAll(file)
 	if err != nil {

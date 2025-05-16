@@ -9,8 +9,15 @@ import (
 func TestJSONInitializeClient(t *testing.T) {
 	t.Run("sets filePath from environment variable", func(t *testing.T) {
 		expectedPath := "custom_secrets.json"
-		os.Setenv("JSON_VAULT_FILE_PATH", expectedPath)
-		defer os.Unsetenv("JSON_VAULT_FILE_PATH")
+		if err := os.Setenv("JSON_VAULT_FILE_PATH", expectedPath); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+
+		defer func() {
+			if err := os.Unsetenv("JSON_VAULT_FILE_PATH"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		client := &JSONVaultClient{}
 		err := client.InitializeClient()
@@ -24,7 +31,9 @@ func TestJSONInitializeClient(t *testing.T) {
 	})
 
 	t.Run("sets default filePath when environment variable is not set", func(t *testing.T) {
-		os.Unsetenv("JSON_VAULT_FILE_PATH")
+		if err := os.Unsetenv("JSON_VAULT_FILE_PATH"); err != nil {
+			t.Fatalf("Failed to unset environment variable: %v", err)
+		}
 
 		client := &JSONVaultClient{}
 		err := client.InitializeClient()
@@ -48,7 +57,11 @@ func TestJSONGetSecrets(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Failed to create temp file: %v", err)
 		}
-		defer os.Remove(file.Name())
+		defer func() {
+			if err := os.Remove(file.Name()); err != nil {
+				t.Fatalf("Failed to remove temp file: %v", err)
+			}
+		}()
 
 		bytes, err := json.Marshal(expectedSecrets)
 		if err != nil {
@@ -58,7 +71,10 @@ func TestJSONGetSecrets(t *testing.T) {
 		if _, err := file.Write(bytes); err != nil {
 			t.Fatalf("Failed to write to temp file: %v", err)
 		}
-		file.Close()
+
+		if err := file.Close(); err != nil {
+			t.Fatalf("Failed to close temp file: %v", err)
+		}
 
 		client := &JSONVaultClient{filePath: file.Name()}
 		secrets, err := client.GetSecrets()
@@ -90,12 +106,19 @@ func TestJSONGetSecrets(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Failed to create temp file: %v", err)
 		}
-		defer os.Remove(file.Name())
+		defer func() {
+			if err := os.Remove(file.Name()); err != nil {
+				t.Fatalf("Failed to remove temp file: %v", err)
+			}
+		}()
 
 		if _, err := file.Write([]byte("invalid json")); err != nil {
 			t.Fatalf("Failed to write to temp file: %v", err)
 		}
-		file.Close()
+
+		if err := file.Close(); err != nil {
+			t.Fatalf("Failed to close temp file: %v", err)
+		}
 
 		client := &JSONVaultClient{filePath: file.Name()}
 		_, err = client.GetSecrets()

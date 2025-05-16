@@ -7,9 +7,15 @@ import (
 
 func TestHandleDefaults(t *testing.T) {
 	t.Run("sets default visibility, type, and repositories", func(t *testing.T) {
-		os.Setenv("DEFAULT_VISIBILITY", "private")
-		os.Setenv("DEFAULT_TYPE", "variable")
-		os.Setenv("DEFAULT_REPOSITORIES", "repo1,repo2")
+		if err := os.Setenv("DEFAULT_VISIBILITY", "private"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		if err := os.Setenv("DEFAULT_TYPE", "variable"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		if err := os.Setenv("DEFAULT_REPOSITORIES", "repo1,repo2"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
 
 		secrets := []VaultSecret{
 			{Name: "secret1", Value: "value1"},
@@ -48,7 +54,9 @@ func TestHandleDefaults(t *testing.T) {
 	})
 
 	t.Run("returns error for invalid default visibility", func(t *testing.T) {
-		os.Setenv("DEFAULT_VISIBILITY", "invalid")
+		if err := os.Setenv("DEFAULT_VISIBILITY", "invalid"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
 
 		secrets := []VaultSecret{
 			{Name: "secret1", Value: "value1"},
@@ -61,8 +69,12 @@ func TestHandleDefaults(t *testing.T) {
 	})
 
 	t.Run("returns error for invalid default type", func(t *testing.T) {
-		os.Setenv("DEFAULT_VISIBILITY", "private")
-		os.Setenv("DEFAULT_TYPE", "invalid")
+		if err := os.Setenv("DEFAULT_VISIBILITY", "private"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		if err := os.Setenv("DEFAULT_TYPE", "invalid"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
 
 		secrets := []VaultSecret{
 			{Name: "secret1", Value: "value1"},
@@ -76,8 +88,14 @@ func TestHandleDefaults(t *testing.T) {
 }
 func TestInitializeVault(t *testing.T) {
 	t.Run("returns JSONVaultClient when VAULT_TYPE is json", func(t *testing.T) {
-		os.Setenv("VAULT_TYPE", "json")
-		defer os.Unsetenv("VAULT_TYPE")
+		if err := os.Setenv("VAULT_TYPE", "json"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		defer func() {
+			if err := os.Unsetenv("VAULT_TYPE"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		client, err := InitializeVault()
 		if err != nil {
@@ -90,8 +108,14 @@ func TestInitializeVault(t *testing.T) {
 	})
 
 	t.Run("returns YAMLVaultClient when VAULT_TYPE is yaml", func(t *testing.T) {
-		os.Setenv("VAULT_TYPE", "yaml")
-		defer os.Unsetenv("VAULT_TYPE")
+		if err := os.Setenv("VAULT_TYPE", "yaml"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		defer func() {
+			if err := os.Unsetenv("VAULT_TYPE"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		client, err := InitializeVault()
 		if err != nil {
@@ -104,8 +128,14 @@ func TestInitializeVault(t *testing.T) {
 	})
 
 	t.Run("returns AzureVaultClient when VAULT_TYPE is azure", func(t *testing.T) {
-		os.Setenv("VAULT_TYPE", "azure")
-		defer os.Unsetenv("VAULT_TYPE")
+		if err := os.Setenv("VAULT_TYPE", "azure"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		defer func() {
+			if err := os.Unsetenv("VAULT_TYPE"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		client, err := InitializeVault()
 		if err != nil {
@@ -118,8 +148,14 @@ func TestInitializeVault(t *testing.T) {
 	})
 
 	t.Run("returns AWSVaultClient when VAULT_TYPE is aws", func(t *testing.T) {
-		os.Setenv("VAULT_TYPE", "aws")
-		defer os.Unsetenv("VAULT_TYPE")
+		if err := os.Setenv("VAULT_TYPE", "aws"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		defer func() {
+			if err := os.Unsetenv("VAULT_TYPE"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		client, err := InitializeVault()
 		if err != nil {
@@ -132,8 +168,14 @@ func TestInitializeVault(t *testing.T) {
 	})
 
 	t.Run("returns error when VAULT_TYPE is invalid", func(t *testing.T) {
-		os.Setenv("VAULT_TYPE", "invalid")
-		defer os.Unsetenv("VAULT_TYPE")
+		if err := os.Setenv("VAULT_TYPE", "invalid"); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		defer func() {
+			if err := os.Unsetenv("VAULT_TYPE"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		_, err := InitializeVault()
 		if err == nil {
