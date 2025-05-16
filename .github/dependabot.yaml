@@ -9,17 +9,13 @@ updates:
     open-pull-requests-limit: 10
     groups:
       # Minor version updates
-      minor:
-        patterns:
-          - "*"
+      go-minor-dependencies:
         update-types:
-          - "version-update:semver-minor"
+          - minor
       # Patch version updates
-      patch:
-        patterns:
-          - "*"
+      go-patch-dependencies:
         update-types:
-          - "version-update:semver-patch"
+          - patch
     security-updates-only: true
 
   # GitHub Actions
@@ -30,14 +26,10 @@ updates:
     open-pull-requests-limit: 10
     groups:
       # Minor version updates
-      minor:
-        patterns:
-          - "*"
+      github-actions-minor-dependencies:
         update-types:
-          - "version-update:semver-minor"
+          - minor
       # Patch version updates
-      patch:
-        patterns:
-          - "*"
+      github-actions-patch-dependencies:
         update-types:
-          - "version-update:semver-patch"
+          - patch
