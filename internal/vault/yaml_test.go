@@ -10,8 +10,14 @@ import (
 func TestYAMLInitializeClient(t *testing.T) {
 	t.Run("sets filePath from environment variable", func(t *testing.T) {
 		expectedPath := "custom_secrets.yaml"
-		os.Setenv("YAML_VAULT_FILE_PATH", expectedPath)
-		defer os.Unsetenv("YAML_VAULT_FILE_PATH")
+		if err := os.Setenv("YAML_VAULT_FILE_PATH", expectedPath); err != nil {
+			t.Fatalf("Failed to set environment variable: %v", err)
+		}
+		defer func() {
+			if err := os.Unsetenv("YAML_VAULT_FILE_PATH"); err != nil {
+				t.Fatalf("Failed to unset environment variable: %v", err)
+			}
+		}()
 
 		client := &YAMLVaultClient{}
 		err := client.InitializeClient()
@@ -25,7 +31,9 @@ func TestYAMLInitializeClient(t *testing.T) {
 	})
 
 	t.Run("sets default filePath when environment variable is not set", func(t *testing.T) {
-		os.Unsetenv("YAML_VAULT_FILE_PATH")
+		if err := os.Unsetenv("YAML_VAULT_FILE_PATH"); err != nil {
+			t.Fatalf("Failed to unset environment variable: %v", err)
+		}
 
 		client := &YAMLVaultClient{}
 		err := client.InitializeClient()
@@ -50,7 +58,11 @@ func TestYAMLGetSecrets(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Failed to create temp file: %v", err)
 		}
-		defer os.Remove(file.Name())
+		defer func() {
+			if err := os.Remove(file.Name()); err != nil {
+				t.Fatalf("Failed to remove temp file: %v", err)
+			}
+		}()
 
 		bytes, err := yaml.Marshal(expectedSecrets)
 		if err != nil {
@@ -60,7 +72,11 @@ func TestYAMLGetSecrets(t *testing.T) {
 		if _, err := file.Write(bytes); err != nil {
 			t.Fatalf("Failed to write to temp file: %v", err)
 		}
-		file.Close()
+		defer func() {
+			if err := file.Close(); err != nil {
+				t.Fatalf("Failed to close temp file: %v", err)
+			}
+		}()
 
 		client := &YAMLVaultClient{filePath: file.Name()}
 		secrets, err := client.GetSecrets()
@@ -92,12 +108,20 @@ func TestYAMLGetSecrets(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Failed to create temp file: %v", err)
 		}
-		defer os.Remove(file.Name())
+		defer func() {
+			if err := os.Remove(file.Name()); err != nil {
+				t.Fatalf("Failed to remove temp file: %v", err)
+			}
+		}()
 
 		if _, err := file.Write([]byte("invalid yaml")); err != nil {
 			t.Fatalf("Failed to write to temp file: %v", err)
 		}
-		file.Close()
+		defer func() {
+			if err := file.Close(); err != nil {
+				t.Fatalf("Failed to close temp file: %v", err)
+			}
+		}()
 
 		client := &YAMLVaultClient{filePath: file.Name()}
 		_, err = client.GetSecrets()

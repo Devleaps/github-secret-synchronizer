@@ -1,0 +1,40 @@
+version: 2
+
+updates:
+  # Go dependencies
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      # Minor version updates
+      go-minor-dependencies:
+        update-types:
+          - minor
+      # Patch version updates
+      go-patch-dependencies:
+        update-types:
+          - patch
+    ignore:
+      - dependency-name: "*"
+        update-types:
+        - version-update:semver-major
+        - version-update:semver-minor
+        - version-update:semver-patch
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      # Minor version updates
+      github-actions-minor-dependencies:
+        update-types:
+          - minor
+      # Patch version updates
+      github-actions-patch-dependencies:
+        update-types:
+          - patch

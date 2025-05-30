@@ -49,15 +49,12 @@ func main() {
 		log.Fatal().Err(err).Msg("Error handling defaults")
 	}
 
-	dryRun := false
-	// If DRY_RUN is set to true, set a variable
-	if os.Getenv("DRY_RUN") == "true" {
-		dryRun = true
-	}
+	dryRun := os.Getenv("DRY_RUN") == "true"
 
 	// Encrypt and push each secret to GitHub
 	for _, secret := range secrets {
-		if secret.Type == vault.SECRET_TYPE {
+		switch secret.Type {
+		case vault.SECRET_TYPE:
 			log.Info().Str("secret", secret.Name).Bool("dry-run", dryRun).Msg("Pushing secret...")
 			if !dryRun {
 				err = githubWrapper.PushSecret(secret)
@@ -66,7 +63,7 @@ func main() {
 				}
 			}
 			log.Info().Str("secret", secret.Name).Bool("dry-run", dryRun).Msg("Secret pushed successfully!")
-		} else if secret.Type == vault.VARIABLE_TYPE {
+		case vault.VARIABLE_TYPE:
 			log.Info().Str("variable", secret.Name).Bool("dry-run", dryRun).Msg("Pushing variable...")
 			if !dryRun {
 				err = githubWrapper.PushVariable(secret)
