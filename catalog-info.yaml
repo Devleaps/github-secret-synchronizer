@@ -1,0 +1,13 @@
+apiVersion: devleaps.io/v1alpha1
+kind: BuildingBlock
+metadata:
+  name: github-secret-synchronizer
+  title: "GitHub Secret Synchronizer"
+  description: "Synchronize secrets and variables into your GitHub organization from JSON, YAML, Azure Key Vault, or AWS Secrets Manager."
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - url: https://github.com/Devleaps/github-secret-synchronizer
+      title: GitHub Repository
+      icon: github
+spec: {}
